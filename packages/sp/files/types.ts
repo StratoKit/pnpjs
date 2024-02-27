@@ -76,7 +76,7 @@ export class _Files extends _SPCollection<IFileInfo[]> {
 
         return {
             data: resp,
-            file: fileFromServerRelativePath(this, resp.ServerRelativeUrl),
+            file: fileFromServerRelativePath(this, `!@pnpFileAddResult::${resp.ServerRelativeUrl}`),
         };
     }
 
@@ -95,7 +95,7 @@ export class _Files extends _SPCollection<IFileInfo[]> {
 
         const response = await spPost(Files(this, `add(overwrite=${shouldOverWrite},url='${encodePath(url)}')`));
 
-        const file = fileFromServerRelativePath(this, response.ServerRelativeUrl);
+        const file = fileFromServerRelativePath(this, `!@pnpFileAddResult::${response.ServerRelativeUrl}`);
 
         file.using(CancelAction(() => {
             return File(file).delete();
@@ -116,7 +116,7 @@ export class _Files extends _SPCollection<IFileInfo[]> {
         const response: IFileInfo = await spPost(Files(this, `addTemplateFile(urloffile='${encodePath(fileUrl)}',templatefiletype=${templateFileType})`));
         return {
             data: response,
-            file: fileFromServerRelativePath(this, response.ServerRelativeUrl),
+            file: fileFromServerRelativePath(this, `!@pnpFileAddResult::${response.ServerRelativeUrl}`),
         };
     }
 }
@@ -490,7 +490,7 @@ export class _File extends ReadableFile<IFileInfo> {
         const response: IFileInfo = await spPost(File(this, `finishUpload(uploadId=guid'${uploadId}',fileOffset=${fileOffset})`), { body: fragment });
         return {
             data: response,
-            file: fileFromServerRelativePath(this, response.ServerRelativeUrl),
+            file: fileFromServerRelativePath(this,  `!@pnpFileAddResult::${response.ServerRelativeUrl}`),
         };
     }
 
